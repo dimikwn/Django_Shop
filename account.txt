@@ -1,0 +1,4 @@
+admin account
+url:{{localhost}}/admin/
+username: admin
+password:admin

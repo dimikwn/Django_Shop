@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+<body>
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="{% url 'home' %}">Cool Shop</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="nav
+        barSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'product_archives' %}">All Products</a></li>
+            </ul>
+            <div>
+                <div class="display: inline-block">
+                    {% if request.user.is_authenticated %}
+                        <span> {{ request.user.username }}</span>
+                        <span><a href="{% url 'logout' %}">Logout</a></span>
+                    {% else %}
+                        <a style="color:black" href="{% url 'login' %}">Login</a>
+                        <a style="color:black" href="{% url 'signup' %}">Signup</a>
+                    {% endif %}
+                </div>
+            </div>
+                <a href="{% url 'cart_detail' %}">
+                    <button class="btn btn-outline-dark" type="submit">
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                    </button>
+                </a>    
+        </div>
+    </div>
+</nav>
+<!-- Header-->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Cart</h1>
+        </div>
+    </div>
+</header>
+<!-- Section-->
+<section style="min-height: 50vh;" class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+{% block content %}
+
+    {% if cart_items %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total Price</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                    <tr>
+                        <td>{{ item.product }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.product.unit_price }}</td>
+                        <td>{{ item.quantity }} * {{ item.product.unit_price }}</td>
+                        <td><a href="{% url 'remove_from_cart' item.id %}">Remove</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3"></td>
+                    <td>Total:</td>
+                    <td>{{ total_price }}</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <a href="{% url 'checkout' %}" class="btn btn-primary">Checkout</a>
+    {% else %}
+        <p>Your shopping cart is empty.</p>
+    {% endif %}
+{% endblock %}
+</div>
+</section>
+
+
+<footer class="py-5 bg-dark">
+    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Cool Shop 2023</p></div>
+</footer>
+
+</body>
+</html>
